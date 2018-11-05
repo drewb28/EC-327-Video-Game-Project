@@ -1,0 +1,363 @@
+//
+
+//  Alien.cpp
+
+//  PA3
+
+//
+
+//  Created by Drew Boodhan on 12/3/17.
+
+//  Copyright © 2017 Drew Boodhan. All rights reserved.
+
+//
+
+
+#include "Alien.h"
+
+#include "Cart_Point.h"
+
+#include "Cart_Vector.h"
+
+#include "Game_Object.h"
+
+#include "Person.h"
+
+#include <math.h>
+
+#include <cmath>
+
+Alien::Alien() : Game_Object()
+
+{
+
+    display_code = 'X';
+
+    state = 's';
+
+    attack_strength=2;
+
+    range=2.0;
+
+    speed = 5;
+
+    target=NULL;
+
+    cout << "Alien Counstructed" << endl;
+
+}
+
+Alien :: Alien(int in_id,Cart_Point in_loc) : Game_Object(in_loc,in_id,'X')
+
+{
+
+    id_num = in_id;
+
+    state='s';
+
+    location.x = in_loc.x;
+
+    location.y = in_loc.y;
+
+    display_code = 'X';
+
+    attack_strength=2;
+
+    range=2.0;
+
+    speed = 5;
+
+    target=NULL;
+
+    cout << "Alien Counstructed" << endl;
+
+}
+
+
+void Alien :: start_attack(Person *in_target)
+
+{
+
+    Cart_Point y;
+
+    double x;
+
+    y = in_target->get_location();
+
+    target = in_target;
+
+    x=cart_distance(y,location);
+
+    if (x<= range)
+
+    {
+
+        cout <<display_code << get_id()<< ": Smash!" << endl;
+
+        state = 'a';
+
+    }
+
+    else
+
+    {
+
+        cout << "Target out of range" << endl;
+
+        
+
+    }
+
+}
+
+    
+
+bool Alien :: update()
+
+{
+
+    switch(state)
+
+    {
+
+        case 's':
+
+        {
+
+            return false;
+
+        }
+
+            break;
+
+        case 'm':
+
+        {
+
+            bool x = update_location();
+
+            
+
+            if (x==true)
+
+            {
+
+                state='s';
+
+                return true;
+
+            }
+
+            return false;
+
+        }
+
+            break;
+
+        case 'a':
+
+        {
+
+            Cart_Point t_loc = target->get_location();
+
+            double actdist = cart_distance(t_loc,location);
+
+            if (actdist > range)
+
+            {
+
+                cout << display_code << get_id()<< ": Target is out of range." << endl;
+
+                cout << display_code << get_id()<< ": Chaaaaaaaaaaarge" << endl;
+
+                state = 's';
+
+                return true;
+
+            }
+
+                else
+
+                {
+
+                    if(target->is_alive())
+
+                    {
+
+                        cout << display_code << get_id() << ": Take that!" << endl;
+
+                    target->take_hit(attack_strength);
+
+                    //state = 'a';
+
+                    return false;
+
+                    }
+
+                    else
+
+                    {
+
+                        cout << display_code << get_id() << ": Triumph!" << endl;
+
+                        state = 's';
+
+                        return true;
+
+                    }
+
+                }
+
+                
+
+            }
+
+        }
+
+                    
+
+                
+
+        return false;
+
+    }
+
+
+
+void Alien :: show_status()
+
+{
+
+    cout <<  "Alien status:" << " ";
+
+    Game_Object :: show_status();
+
+    if (state == 's')
+
+    {
+
+        
+
+        cout << "is stopped" << endl;
+
+    }
+
+    else if (state=='a')
+
+    {
+
+        cout << "is attacking" << endl;
+
+    }
+
+    else
+
+    {
+
+         cout << "moving at a speed of " << speed << " towards " << destination << " at each step of " << delta << " " ;
+
+    }
+
+}
+
+
+void Alien ::start_moving(Cart_Point dest)
+
+{
+
+    setup_destination(dest);
+
+    state = 'm';
+
+    cout << "Moving" << " " << id_num << " to " << destination << endl;
+
+    cout << display_code << id_num << ": On My Way." << endl;
+
+    return;
+
+}
+
+
+void Alien :: stop()
+
+{
+
+    state = 's';
+
+    cout << "Stopping " << id_num << endl;
+
+    cout << display_code << id_num << " : All Right" << endl;
+
+}
+
+
+void Alien :: setup_destination(Cart_Point dest)
+
+{
+
+    destination = dest;
+
+    if (cart_distance(destination,location)==0)
+
+    {
+
+        cout << "I'm already there, see?" << endl;
+
+    }
+
+    else
+
+    {
+
+        delta = (destination - location) * (speed / cart_distance(destination, location));
+
+    }
+
+}
+
+
+bool Alien :: update_location()
+
+{
+
+    Cart_Point location1 = get_location();
+
+    if(fabs(destination.y-location1.y)<=fabs(delta.y) && fabs(destination.x-location1.x) <= fabs(delta.x))
+
+    {
+
+        cout << display_code << id_num << ": I'm there!" << endl;
+
+        location = destination;
+
+        return true;
+
+    }
+
+    
+
+    else if(delta.y == 0 && delta.x==0)
+
+    {
+
+        cout << "I'm already there, see?" << endl;
+
+    }
+
+    
+
+    else
+
+    {
+
+        location = delta + location;
+
+        cout << display_code << id_num << ": step..." << endl;
+
+        return false;
+
+    }
+
+    return false;
+
+}

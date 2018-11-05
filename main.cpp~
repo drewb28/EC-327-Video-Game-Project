@@ -1,0 +1,101 @@
+//
+//  main.cpp
+//  PA3
+//
+//  Created by Drew Boodhan on 11/8/17.
+//  Copyright © 2017 Drew Boodhan. All rights reserved.
+//
+
+#include <iostream>
+#include "Cart_Vector.h"
+#include "Cart_Point.h"
+#include "Game_Object.h"
+#include "Oxygen_Depot.h"
+#include "Space_Station.h"
+#include "Person.h"
+#include "Astronaut.h"
+#include "Model.h"
+#include "Game_Command.h"
+#include "View.h"
+using namespace std;
+
+int main() {
+
+cout<< "EC 327: Introduction to Software Engineering" << endl << "Fall 2017" << endl << "Programming Assignment 3" << endl;
+    
+    View view; 
+    Model model;
+    char c;
+model.show_status();
+model.display(view);
+while(c!='q')
+{
+    cout << "Enter Command: ";
+    cin >> c;
+    switch(c)
+    {
+        case 'm':
+        {
+            double x, y;
+            int id;
+            cin >> id >> x >> y;
+            do_move_command(model,id,x,y,view);
+	}
+	break;
+        case 'w' :
+        {
+            int id1, id2;
+            cin >> id1 >> id2;
+            do_workadepot_command(model,id1,id2,view);
+		
+        }
+	break;
+        case 'd' :
+        {
+            int id1,id2;
+            cin >> id1 >> id2;
+            do_depositmoonstones_command(model,id1,id2,view);
+		
+        }
+	break;
+        case 's':
+        {
+            int id1;
+            cin >> id1;
+            do_stop_command(model,id1,view);
+		
+        }
+	break;
+        case 'l':
+        {
+            int id1,id2;
+            cin >> id1 >> id2;
+            do_lockinstation_command(model,id1,id2,view);
+		
+        }
+	break;
+        case 'g':
+        {
+            do_go_command(model,view);
+		
+        }
+	break;
+        case 'r':
+        {
+            do_run_command(model,view);
+		
+        }
+	break;
+        case 'q':
+        {
+            do_quit_command(model);
+		
+        }
+	break;
+    }
+}
+}
+    
+    
+    
+

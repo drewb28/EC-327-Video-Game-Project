@@ -1,0 +1,58 @@
+//
+
+//  Space_Station.hpp
+
+//  PA3
+
+//
+
+//  Created by Drew Boodhan on 11/15/17.
+
+//  Copyright © 2017 Drew Boodhan. All rights reserved.
+
+//
+
+
+#ifndef Space_Station_h
+
+#define Space_Station_h
+
+#include <iostream>
+
+#include <stdio.h>
+
+#include "Cart_Point.h"
+
+#include "Game_Object.h"
+
+class Space_Station : public Game_Object{
+
+    
+
+private:
+
+    double amount_moonstones;
+
+    int number_astronauts;
+
+public:
+
+    Space_Station();
+
+    Space_Station(Cart_Point inputLoc, int inputId);
+
+    void deposit_moonstones(double deposit_amount);
+
+    bool add_astronaut();
+
+    int get_astronauts();
+
+    bool update();
+
+    void show_status();
+
+    ~Space_Station();
+
+};
+
+#endif /* Space_Station_hpp */
